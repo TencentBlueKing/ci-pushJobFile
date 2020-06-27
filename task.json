@@ -1,0 +1,203 @@
+{
+  "atomCode": "pushJobFile",
+  "execution": {
+    "packagePath": "pushJobFile-jar-with-dependencies.jar",
+    "language": "java",
+    "minimumVersion": "1.8",
+    "demands": [],
+    "target": "$bk_java_path -jar pushJobFile-jar-with-dependencies.jar -Dfile.encoding=utf8"
+  },
+  "input": {
+    "bizId": {
+      "label": "业务 ID(App ID)",
+      "default": "",
+      "type": "vuex-input",
+      "desc": "Job 中登记的业务 ID(App ID in Job platform)",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "srcType": {
+      "label": "源文件(Src File)",
+      "default": "PIPELINE",
+      "type": "enum-input",
+      "desc": "已归档构件[流水线路径/自定义路径](Artifact[Pipeline Build Path/Custom Path])",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false,
+      "list": [
+        {
+          "label": "已归档构件[流水线路径](Artifact[Pipeline Build Path])",
+          "value": "PIPELINE"
+        },
+        {
+          "label": "已归档构件[自定义路径](Artifact[Custom Path])",
+          "value": "CUSTOMIZE"
+        },
+        {
+          "label": "远程服务器(File on Remote Server)",
+          "value": "REMOTE"
+        }
+      ]
+    },
+    "sourceIpListStr": {
+      "label": "源IP[手工录入](Src IPs[Manual Input])",
+      "default": "",
+      "placeholder": "请输入源 IP 列表(Please input source IP list:(cloud area id:ip))",
+      "desc": "云区域:IP\n如：82:172.1.2.3 (cloud area id:ip\nex: 82:172.1.2.3, separated by one of[,;] or a line break when there are few IPs)",
+      "type": "vuex-textarea",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "srcType",
+            "value": "REMOTE"
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "srcDynamicGroupIdListStr": {
+      "label": "源动态分组ID列表(Dynamic Group IDs)",
+      "default": "",
+      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "type": "vuex-textarea",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "srcType",
+            "value": "REMOTE"
+          }
+        ]
+      },
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "sourceAccount": {
+      "label": "源文件机器执行账号(Src Account)",
+      "default": "root",
+      "placeholder": "请输入源服务器用户名(Please input an account to be used on source machines)",
+      "type": "vuex-input",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "srcType",
+            "value": "REMOTE"
+          }
+        ]
+      },
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "sourcePath": {
+      "label": "源文件[绝对]路径(Source file absolute path on remote server)",
+      "default": "",
+      "placeholder": "输入源服务器操作系统上的绝对路径(Please input absolute path of source file on remote server)",
+      "type": "vuex-input",
+      "desc": "不同目录中的同名文件会被覆盖(File with same name may be overwritten)",
+      "rely": {
+        "operation": "AND",
+        "expression": [
+          {
+            "key": "srcType",
+            "value": "REMOTE"
+          }
+        ]
+      },
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "archivePath": {
+      "label": "源[相对]路径[暂不支持通配符](Source Relative Path, wildcards not supported yet)",
+      "default": "",
+      "type": "vuex-input",
+      "desc": "",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "getPlaceholder": "(element) => { return element.srcType === 'PIPELINE' ? '已归档构件的相对路径，暂不支持*通配符' : element.srcType === 'CUSTOMIZE' ? '自定义版本仓库中的相对路径，暂不支持*通配符' : '请输入源服务器操作系统上的绝对路径'}",
+      "isSensitive": false,
+      "rely": {
+        "operation": "OR",
+        "expression": [
+          {
+            "key": "srcType",
+            "value": "PIPELINE"
+          },
+          {
+            "key": "srcType",
+            "value": "CUSTOMIZE"
+          }
+        ]
+      }
+    },
+    "targetIpListStr": {
+      "label": "目标IP[手工录入](Target IPs[Manual Input])",
+      "default": "",
+      "placeholder": "请输入目标 IP 列表(Please input target IP list:(cloud area id:ip))",
+      "desc": "云区域:IP\n如：82:172.1.2.3 (cloud area id:ip\nex: 82:172.1.2.3, separated by one of[,;] or a line break when there are few IPs)",
+      "type": "vuex-textarea",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "targetDynamicGroupIdListStr": {
+      "label": "目标动态分组ID列表(Dynamic Group IDs)",
+      "default": "",
+      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "type": "vuex-textarea",
+      "required": false,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "targetAccount": {
+      "label": "目标机器执行账号(Target Account)",
+      "default": "",
+      "placeholder": "请输入目标机服务器用户名(Please input an account to be used on target machines)",
+      "type": "vuex-input",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "targetPath": {
+      "label": "目标机操作系统上的绝对路径(Target Path)",
+      "default": "",
+      "placeholder": "请输入目标机操作系统上的绝对路径(Please input a target path to be used on target machines)",
+      "type": "vuex-input",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    },
+    "timeout": {
+      "label": "最大运行时间(分钟)(Max Running Time(minutes))",
+      "default": 600,
+      "placeholder": "",
+      "type": "vuex-input",
+      "desc": " 分发的最大超时时间。如果超过这个时间，则流水线失败，但实际分发任务可能仍然在运行(Max Running Time, pipeline will fail if overtime but task on Job System may still be running)",
+      "required": true,
+      "disabled": false,
+      "hidden": false,
+      "isSensitive": false
+    }
+  }
+}
+
