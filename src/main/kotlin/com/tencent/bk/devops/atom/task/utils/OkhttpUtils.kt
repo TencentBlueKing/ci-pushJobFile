@@ -29,8 +29,6 @@ object OkhttpUtils {
 
     private val logger = LoggerFactory.getLogger(OkhttpUtils::class.java)
 
-    val jsonMediaType = MediaType.parse("application/json")
-
     val certificateStrList = mutableListOf<String>()
 
     private var okHttpClient: OkHttpClient? = null
@@ -42,30 +40,30 @@ object OkhttpUtils {
         certificateStrList.add(certificateStr)
     }
 
-//    fun getCertificates(): HandshakeCertificates {
-//        val certificatesBuilder = HandshakeCertificates.Builder()
-//        certificateStrList.forEach { certificate ->
-//            certificatesBuilder.addTrustedCertificate(certificate)
-//        }
-//        return certificatesBuilder.build()
-//    }
-
     fun getOkHttpClient(): OkHttpClient {
         if (okHttpClient == null) {
-//            val certificates = getCertificates()
             var allCertificatesStr = ""
             certificateStrList.forEach { certificateStr ->
                 allCertificatesStr += certificateStr + "\n"
             }
             allCertificatesStr.removeSuffix("\n")
-            val trustManager = trustManagerForCertificates(allCertificatesStr.byteInputStream())
-            val sslContext = SSLContext.getInstance("TLS")
-            //使用构建出的trustManger初始化SSLContext对象
-            sslContext.init(null, arrayOf(trustManager), null)
-            //获得sslSocketFactory对象
-            val sslSocketFactory = sslContext.socketFactory
-            okHttpClient = okhttp3.OkHttpClient.Builder()
-                .sslSocketFactory(sslSocketFactory, trustManager)
+            var trustManager: X509TrustManager? = null
+            var sslSocketFactory: SSLSocketFactory? = null
+            try {
+                trustManager = trustManagerForCertificates(allCertificatesStr.byteInputStream())
+                val sslContext = SSLContext.getInstance("TLS")
+                //使用构建出的trustManger初始化SSLContext对象
+                sslContext.init(null, arrayOf(trustManager), null)
+                //获得sslSocketFactory对象
+                sslSocketFactory = sslContext.socketFactory
+            } catch (e: Exception) {
+                logger.info("Fail to load certificate")
+            }
+            val builder = okhttp3.OkHttpClient.Builder()
+            if (sslSocketFactory != null && trustManager != null) {
+                builder.sslSocketFactory(sslSocketFactory, trustManager)
+            }
+            okHttpClient = builder
                 .connectTimeout(5L, TimeUnit.SECONDS)
                 .readTimeout(30L, TimeUnit.SECONDS)
                 .writeTimeout(30L, TimeUnit.SECONDS)
@@ -76,7 +74,6 @@ object OkhttpUtils {
 
     fun getLongClient(): OkHttpClient {
         if (longHttpClient == null) {
-//            val certificates = getCertificates()
             var allCertificatesStr = ""
             certificateStrList.forEach { certificateStr ->
                 allCertificatesStr += certificateStr + "\n"
