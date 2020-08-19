@@ -33,11 +33,8 @@ class JobResourceApi {
     fun getTaskResult(appId: String, appSecret: String, bizId: String, taskInstanceId: Long, operator: String, esbHost: String): TaskResult {
         try {
             val url = "$esbHost/api/c/compapi/v2/job/get_job_instance_status/?bk_app_code=$appId&bk_app_secret=$appSecret&bk_username=$operator&bk_biz_id=$bizId&job_instance_id=$taskInstanceId"
-//            logger.info("Get request url: $url")
             OkhttpUtils.doGet(url).use { resp ->
                 val responseStr = resp.body()!!.string()
-//            val responseStr = HttpUtils.get(url)
-//                logger.info("responseBody: $responseStr")
                 val response: Map<String, Any> = jacksonObjectMapper().readValue(responseStr)
                 if (response["code"] == 0) {
                     val responseData = response["data"] as Map<String, Any>
@@ -70,15 +67,12 @@ class JobResourceApi {
     }
 
     private fun sendTaskRequest(requestBody: String, url: String): Long {
-        logger.info("request url: $url")
-//        logger.info("request body: $requestBody")
         val httpReq = Request.Builder()
             .url(url)
             .post(RequestBody.create(MediaType.parse("application/json"), requestBody))
             .build()
         OkhttpUtils.doHttp(httpReq).use { resp ->
             val responseStr = resp.body()!!.string()
-//        val responseStr = HttpUtils.postJson(url, requestBody)
             logger.info("response headers: {}", resp.headers())
             logger.info("response body: $responseStr")
             if (resp.code() != 200) {
