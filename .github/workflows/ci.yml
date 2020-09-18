@@ -31,7 +31,7 @@ jobs:
       - name: Change Maven Settings
         uses: whelk-io/maven-settings-xml-action@v12
         with:
-          servers: '[{ "id": "github", "username": "${{ secrets.PRIVATE_GITHUB_REPO_USER }}", "password":"${{ secrets.PRIVATE_GITHUB_REPO_PASSWORD }}"}]
+          servers: '[{ "id": "github", "username": "${{ secrets.PRIVATE_GITHUB_REPO_USER }}", "password":"${{ secrets.PRIVATE_GITHUB_REPO_PASSWORD }}"}]'
       - name: Build
         run: mvn clean package
       - name: Upload a Build Artifact
