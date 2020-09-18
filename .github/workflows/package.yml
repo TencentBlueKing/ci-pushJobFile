@@ -1,4 +1,4 @@
-name: CI
+name: package
 on:
   push:
     branches:

@@ -1,0 +1,58 @@
+name: release
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  FILENAME: pushJobFile
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8.0.181'
+          java-package: jdk
+          architecture: x64
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v3
+        with:
+          maven-version: 3.6.1
+      - name: Change Maven Settings
+        uses: whelk-io/maven-settings-xml-action@v12
+        with:
+          servers: '[{ "id": "github", "username": "${{ secrets.PRIVATE_GITHUB_REPO_USER }}", "password":"${{ secrets.PRIVATE_GITHUB_REPO_PASSWORD }}"}]'
+      - name: Build
+        run: mvn clean package
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.FILENAME }}.zip
+          # A file, directory or wildcard pattern that describes what to upload
+          path: ./target/${{ env.FILENAME }}.zip
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+          prerelease: true
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/${{ env.FILENAME }}.zip
+          asset_name: ${{ env.FILENAME }}.zip
+          asset_content_type: application/zip
