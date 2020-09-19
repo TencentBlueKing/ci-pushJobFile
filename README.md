@@ -5,6 +5,7 @@
 - BK_APP_ID:应用 ID
 - BK_APP_SECRET: 安全密钥(应用 TOKEN)，可以通过 蓝鲸智云开发者中心 -> 点击应用 ID -> 基本信息 获取
 - ESB_HOST: 蓝鲸平台地址, 比如https://paas.bk.com
+- ESB_CERTIFICATE: 蓝鲸平台https私有证书公钥，若使用http或https证书为商业CA颁发的证书（浏览器域名左边的锁标志为关闭的锁表示连接安全）则无须配置
 - JOB_HOST: 蓝鲸JOB独立地址，比如https://job.bk.com
   
 
