@@ -19,6 +19,7 @@ import com.tencent.bk.devops.atom.task.utils.OkhttpUtils
 import com.tencent.bk.devops.atom.utils.json.JsonUtil
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.LoggerFactory
+import java.lang.IndexOutOfBoundsException
 
 @AtomService(paramClass = InnerJobParam::class)
 class InnerJobAtom : TaskAtom<InnerJobParam> {
@@ -190,7 +191,11 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
             return listOf()
         }
         val ipList = ipListStr.trim().split(",", ";", "\n")
-        return ipList.map { FastPushIpDTO(it.split(":")[1], it.split(":")[0].toLong()) }
+        try {
+            return ipList.map { FastPushIpDTO(it.split(":", "：")[1], it.split(":", "：")[0].toLong()) }
+        } catch (e: IndexOutOfBoundsException) {
+            throw RuntimeException("IP输入格式不正确，请检查，正确格式：云区域ID:IP，例如0:192.168.1.1 (Please check IP format, right IP format:cloud area id:ip, ex:0:192.168.1.1)")
+        }
     }
 
     private fun getDynamicGroupIdListFromStr(dynamicGroupIdListStr: String): List<String> {
