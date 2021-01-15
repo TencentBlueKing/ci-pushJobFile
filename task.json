@@ -1,5 +1,5 @@
 {
-  "atomCode": "pushJobFile",
+  "atomCode": "bkci_pushJobFile",
   "execution": {
     "packagePath": "pushJobFile-jar-with-dependencies.jar",
     "language": "java",
