@@ -83,7 +83,8 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
         result: AtomResult,
         isCustom: Boolean = false
     ) {
-        val userId = param.pipelineStartUserName
+        // 规避webhook触发下启动人/提交人不一致问题：整个插件全部使用流水线最后保存人作为执行者
+        val userId = param.pipelineUpdateUserName
         val projectId = param.projectName
         val pipelineId = param.pipelineId
         val buildId = param.pipelineBuildId
