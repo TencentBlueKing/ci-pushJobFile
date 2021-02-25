@@ -65,8 +65,8 @@
     "srcDynamicGroupIdListStr": {
       "label": "源动态分组ID列表(Dynamic Group IDs)",
       "default": "",
-      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
-      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔（注意：若对接蓝鲸6.x中的作业平台，请在动态分组ID前加上\"具体的业务ID:\"，对接5.x中的作业平台则不需要）\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)(Important：please add \"[AppID]:\" before every Dynamic Group ID if you use this plugin to invoke Job in BlueKing6.0)",
+      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔（注意：若对接蓝鲸6.x中的作业平台，请在动态分组ID前加上\"具体的业务ID:\"，对接5.x中的作业平台则不需要）\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)(Important：please add \"[AppID]:\" before every Dynamic Group ID if you use this plugin to invoke Job in BlueKing6.0)",
       "type": "vuex-textarea",
       "rely": {
         "operation": "AND",
@@ -159,8 +159,8 @@
     "targetDynamicGroupIdListStr": {
       "label": "目标动态分组ID列表(Dynamic Group IDs)",
       "default": "",
-      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
-      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)",
+      "placeholder": "请输入动态分组ID（从CMDB获取）列表\n如：brcfabc2si9h3j4v3qb1，多个ID之间用,;换行符中的任意一个进行分隔（注意：若对接蓝鲸6.x中的作业平台，请在动态分组ID前加上\"具体的业务ID:\"，对接5.x中的作业平台则不需要）\n(Please input Dynamic Group IDs (Can be acquired from CMDB),ex: brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)(Important：please add \"[AppID]:\" before every Dynamic Group ID if you use this plugin to invoke Job in BlueKing6.0)",
+      "desc": "动态分组ID\n如：brcfabc2si9h3j4v3qb1\n多个ID之间用,;换行符中的任意一个进行分隔（注意：若对接蓝鲸6.x中的作业平台，请在动态分组ID前加上\"具体的业务ID:\"，对接5.x中的作业平台则不需要）\n(Dynamic Group IDs, ex:brcfabc2si9h3j4v3qb1, separated by one of[,;] or a line break when there are few IDs)(Important：please add \"[AppID]:\" before every Dynamic Group ID if you use this plugin to invoke Job in BlueKing6.0)",
       "type": "vuex-textarea",
       "required": false,
       "disabled": false,
