@@ -260,7 +260,8 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
                 taskInstanceId = taskInstanceId,
                 operator = operator,
                 buildId = buildId,
-                esbHost = esbHost
+                esbHost = esbHost,
+                result = result
             )
 
             logger.info(JobUtils.getDetailUrl(jobHost, bizId, taskInstanceId))
@@ -287,33 +288,43 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
         operator: String,
         buildId: String,
         taskId: String,
-        esbHost: String
+        esbHost: String,
+        result: AtomResult
     ) {
+        logger.info("begin to check task status")
         if (System.currentTimeMillis() - startTime > maxRunningMills) {
             logger.warn("job getTimeout. getTimeout minutes:${maxRunningMills / 60000}")
             throw RuntimeException("job Timeout, executeTime:${System.currentTimeMillis() - startTime}")
         }
 
-        var jobSuccess = true
+        var needContinue = true
 
-        while (jobSuccess) {
+        while (needContinue) {
             Thread.sleep(5000)
+            logger.info(JobUtils.getDetailUrl(jobHost, bizId, taskInstanceId))
             val taskResult = JobUtils.getTaskResult(appId, appSecret, bizId, taskInstanceId, operator, esbHost)
             if (taskResult.isFinish) {
+                needContinue = false
                 if (taskResult.success) {
                     logger.info("[$buildId]|SUCCEED|taskInstanceId=$taskId|${taskResult.msg}")
-                    jobSuccess = false
                 } else {
                     logger.info("[$buildId]|FAIL|taskInstanceId=$taskId|${taskResult.msg}")
-                    throw RuntimeException("job execute fail, message:${taskResult.msg}")
+                    val msg = "job execute fail, message:${taskResult.msg}"
+                    result.status = Status.failure
+                    result.message =
+                        "${msg}文件分发失败，请根据使用的蓝鲸版本点击插件日志中对应的链接前往作业平台查看详情(Push file fail, please click the link and go to Job to check the detail.)"
                 }
             } else {
                 logger.info("执行中/Waiting for job:$taskInstanceId", taskId)
             }
 
             if (System.currentTimeMillis() - startTime > maxRunningMills) {
+                needContinue = false
                 logger.error("job execute timeout, exit out")
-                throw RuntimeException("job Timeout, executeTime:${System.currentTimeMillis() - startTime}")
+                val msg = "job Timeout, executeTime:${System.currentTimeMillis() - startTime}"
+                result.status = Status.failure
+                result.message =
+                    "${msg}文件分发失败，请根据使用的蓝鲸版本点击插件日志中对应的链接前往作业平台查看详情(Push file fail, please click the link and go to Job to check the detail.)"
             }
         }
         logger.info("Job执行耗时(Time consuming):${System.currentTimeMillis() - startTime}")
