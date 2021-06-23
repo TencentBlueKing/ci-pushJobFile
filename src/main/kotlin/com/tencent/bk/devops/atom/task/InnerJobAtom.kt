@@ -210,6 +210,13 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
         return dynamicGroupIdList
     }
 
+    private fun printLink(bizId: String, taskInstanceId: Long, jobHost: String) {
+        logger.info("对接蓝鲸企业版3.x/社区版6.x中的作业平台请点击以下链接查看详情：")
+        logger.info(JobUtils.getV3DetailUrl(bizId, taskInstanceId, jobHost))
+        logger.info("对接蓝鲸企业版2.x/社区版5.x中的作业平台请点击以下链接查看详情：")
+        logger.info(JobUtils.getV2DetailUrl(bizId, taskInstanceId, jobHost))
+    }
+
     fun distribute(
         param: InnerJobParam,
         fileSource: FastPushFileSource,
@@ -249,7 +256,7 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
         )
         try {
             val taskInstanceId = JobUtils.fastPushFileV2(fastPushFileReq, this.esbHost)
-            logger.info(JobUtils.getDetailUrl(jobHost, bizId, taskInstanceId))
+            printLink(bizId,taskInstanceId,jobHost)
             val startTime = System.currentTimeMillis()
 
             checkStatus(
@@ -264,7 +271,7 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
                 result = result
             )
 
-            logger.info(JobUtils.getDetailUrl(jobHost, bizId, taskInstanceId))
+            printLink(bizId,taskInstanceId,jobHost)
         } catch (e: Exception) {
             logger.error("Job API invoke failed", e)
             result.status = Status.failure
@@ -301,7 +308,7 @@ class InnerJobAtom : TaskAtom<InnerJobParam> {
 
         while (needContinue) {
             Thread.sleep(5000)
-            logger.info(JobUtils.getDetailUrl(jobHost, bizId, taskInstanceId))
+            printLink(bizId,taskInstanceId,jobHost)
             val taskResult = JobUtils.getTaskResult(appId, appSecret, bizId, taskInstanceId, operator, esbHost)
             if (taskResult.isFinish) {
                 needContinue = false
