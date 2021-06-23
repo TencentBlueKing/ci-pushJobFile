@@ -1,6 +1,7 @@
 # Job-文件分发(GITHUB版)
 
 # 配置
+1. 插件配置  
 插件上架时，需要配置蓝鲸智云相关参数，路径：设置->私有配置
 - BK_APP_ID:应用ID，别名bk_app_code，需要使用已添加至蓝鲸ESB接口调用白名单中的应用ID，建议使用蓝鲸开发者中心内的蓝盾调用ESB接口专用应用ID（默认为bk_ci）
 - BK_APP_SECRET: 应用ID对应的安全密钥(应用TOKEN)
@@ -22,6 +23,10 @@ BK_APP_SECRET  略
 ESB_HOST       http://paas.service.consul:80
 JOB_HOST       http://job.bktencent.com:80
 ```
+
+2.作业平台配置  
+请将蓝鲸持续集成平台后台微服务artifactory所在机器IP全部加入至作业平台的IP白名单中，在作业平台的“平台管理->IP白名单”中进行配置，生效范围选择文件分发，若artifactory扩容，需将扩容机器IP更新至白名单中。
+
 # 常见问题&解决方案
 #### 1.权限问题
 插件使用**流水线最后保存人**的身份去调用作业平台接口。
