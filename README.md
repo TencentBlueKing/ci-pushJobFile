@@ -23,6 +23,23 @@ BK_APP_SECRET  略
 ESB_HOST       http://paas.service.consul:80
 JOB_HOST       http://job.bktencent.com:80
 ```
+蓝鲸社区版7.0及以上用户可在蓝鲸K8S中控机上执行以下命令获取配置变量：
+```shell
+namespace="blueking"
+ESB_HOST=$(helm -n $namespace get values bk-job --all|grep bkComponentApiUrl|awk -F": " '{print $2}')
+BK_APP_ID=$(helm -n $namespace get values bk-job --all|grep appCode|awk -F": " '{print $2}')
+BK_APP_SECRET=$(helm -n $namespace get values bk-job --all|grep appSecret|awk -F": " '{print $2}')
+# 读取 bkDomainScheme
+scheme=$(helm -n $namespace get values bk-job --all|yq e '.bkDomainScheme')
+# 读取 job.web.domain
+domain=$(helm -n $namespace get values bk-job --all|yq e '.job.web.domain')
+# 拼接成完整的 URL
+JOB_HOST="${scheme}://${domain}"
+echo "BK_APP_ID=$BK_APP_ID"
+echo "BK_APP_SECRET=$BK_APP_SECRET"
+echo "ESB_HOST=$ESB_HOST"
+echo "JOB_HOST=$JOB_HOST"
+```
 
 2.作业平台配置  
 请将蓝鲸持续集成平台后台微服务artifactory所在机器IP全部加入至作业平台的IP白名单中，在作业平台的“平台管理->IP白名单”中进行配置，生效范围选择文件分发，若artifactory扩容，需将扩容机器IP更新至白名单中。
